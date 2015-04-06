@@ -7,12 +7,31 @@ namespace Omnipay\SagePay\Message;
  */
 class DirectAuthorizeRequest extends AbstractRequest
 {
+    // An authorization is a deferred transaction, to be released or
+    // cancelled later.
     protected $action = 'DEFERRED';
+
+    // The only characterset that SagePay accepts in all posts, at least for now.
+    const GATEWAY_CHARSET = 'ISO-8859-1';
+
     protected $cardBrandMap = array(
         'mastercard' => 'mc',
         'diners_club' => 'dc'
     );
 
+    /**
+     * Convert a string to the SagePay characterset.
+     * Only UTF-8 is recognised for now; if the string is a valid UTF-8
+     * string, then it is converted to self::GATEWAY_CHARSET with
+     * translitteration to help preserve the information it contains.
+     */
+    protected function convertCharset($string)
+    {
+    }
+
+    /**
+     * Get the base data used by all authorization and purchase requests.
+     */
     protected function getBaseAuthorizeData()
     {
         $this->validate('amount', 'card', 'transactionId');
